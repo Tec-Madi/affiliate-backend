@@ -34,8 +34,12 @@ app = FastAPI(
 )
 
 origins = [
-    "https://madisync.com",
-    "https://www.madisync.com"
+    "https://aishorasub.com",
+    "https://www.aishorasub.com",
+    "https://hzquicklink.com",
+    "https://www.hzquicklink.com",
+    "https://meeralinks.com",
+    "https://www.meeralinks.com"
 ]
 
 app.add_middleware(
@@ -43,8 +47,7 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
-    expose_headers=["*"]
+    allow_headers=["*"]
 )
 
 #<---------- ERROR ---------->
