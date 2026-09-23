@@ -84,8 +84,8 @@ class UserRepository:
             .where(
                 Transaction.status.in_([Status.SUCCESS.value, Status.COMPLETED.value]),
                 Transaction.service.in_(["data", "airtime", "cable", "disco"]),
-                or_(start_date is None, Transaction.created_at >= datetime.combine(start_date, time.min)),
-                or_(end_date is None, Transaction.created_at <= datetime.combine(end_date, time.max))
+                or_(start_date is None, Transaction.created_at >= datetime.combine(start_date, time.min) if start_date else True),
+                or_(end_date is None, Transaction.created_at <= datetime.combine(end_date, time.max) if end_date else True)
             ).group_by(User.name, User.email)
             .order_by(
                 func.sum(Transaction.amount).desc()
