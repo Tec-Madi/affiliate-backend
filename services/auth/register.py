@@ -13,10 +13,13 @@ def register_function(db: Session, name: str, email: str, number: str, pin: str,
         raise UnprocessibleEntityError('number can only be digit')
 
     if len(pin) != 4:
-        raise BadRequestError('pin must be exactly 4 digit')
+        raise BadRequestError('Pin must be exactly 4 digit')
 
     if len(password) < 8:
         raise BadRequestError('password must be greater than 8 character')
+
+    if len(number) != 11:
+        raise BadRequestError("Phone number must be 11 digit")
 
     user_repo = UserRepository(db)
 
