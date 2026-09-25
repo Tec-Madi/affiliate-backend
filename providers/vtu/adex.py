@@ -90,14 +90,14 @@ class AdexProvider(BaseProvider):
                 'request-id': reference
             }
 
-            response_mapping = {
-                'status_key': ['status'],
-                'success_value': 'success',
-                'failure_value': 'fail',
-                'api_response_key': ['response'],
-                'reference_key': ['transid'],
-                'provider_name': self.provider_name,
-                'token': 'token'
-            }
+        response_mapping = {
+            'status_key': ['status'],
+            'success_value': 'success',
+            'failure_value': 'fail',
+            'api_response_key': ['response'],
+            'reference_key': ['transid'],
+            'provider_name': self.provider_name,
+            'token': 'token'
+        }
 
-        return await super().virtual_top_up(url=url, body=body, header=headers, response_mapping=response_mapping)
+        return await super().virtual_top_up(url=url, body=body, headers=headers, response_mapping=response_mapping)

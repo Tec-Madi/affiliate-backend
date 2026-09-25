@@ -70,7 +70,7 @@ class MadixProvider(BaseProvider):
                 "plan_type": plan_type
             }
 
-        response_param = {
+        response_mapping = {
             "status_key": ["status"],
             "success_value": "successful",
             "failure_value": "failed",
@@ -80,4 +80,4 @@ class MadixProvider(BaseProvider):
             "provider_name": self.provider_name
         }
 
-        return super().virtual_top_up(url=url, body=body, headers=headers, response_param=response_param)
+        return super().virtual_top_up(url=url, body=body, headers=headers, response_mapping=response_mapping)

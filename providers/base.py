@@ -15,12 +15,7 @@ class BaseProvider(ABC):
 
     @abstractmethod
     async def authenticate(self, credentials: dict) -> ProviderAuthResponse:
-        return {
-            "account_or_business_id": credentials.get("account_or_business_id"),
-            "token_or_api_key": credentials.get("token_or_api_key"),
-            "username_or_public_key": credentials.get("username_or_public_key"),
-            "password_or_secret_key": credentials.get("password_or_public_key")
-        }
+        return credentials
 
     @abstractmethod
     async def virtual_top_up(self, **kwarg) -> ProviderAuthResponse:
@@ -91,27 +86,31 @@ class BasePayment(ABC):
         response_map: dict = kwargs.get("response_map")
 
         response = await request("POST", url, headers, None, body)
-
         response.raise_for_status()
+
+        data: dict = response.json()
 
         bank_accounts: list[BankAccount] = []
 
-        accounts: list[dict[str, Any]] = response.json()(response_map.get("accounts_map"), [])
+        accounts: list[dict[str, Any]] = data.get(response_map.get("accounts_key"), [])
 
         for account in accounts:
-            account_number = account.get(response_map.get("account_number_key"))
-            bank_name = account.get(response_map.get("bank_name_key"))
-            account_name = account.get(response_map.get("account_name_key"))
-            account_reference = account.get(response_map.get("account_reference_key"))
-            bank_code = account.get(response_map.get("bank_code_key"))
+            account_number = account.get(response_map["account_number_key"])
+            bank_name = account.get(response_map["bank_name_key"])
+            account_name = account.get(response_map["account_name_key"])
+            account_reference = account.get(response_map["account_reference_key"])
+            bank_code = account.get(response_map["bank_code_key"])
 
             bank_accounts.append(BankAccount(
                 bank_name=bank_name, 
                 account_number=account_number, 
                 account_name=account_name,
                 account_reference=account_reference,
-                bank_code=bank_code
+                bank_code=str(bank_code),
+                provider=response_map["provider"]
             ))
+
+        print(bank_accounts)
 
         return bank_accounts
     

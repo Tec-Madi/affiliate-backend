@@ -47,7 +47,7 @@ class PaymentPoint(BasePayment):
         }
 
         response_map = {
-            "bank_accounts_key": "bankAccounts",
+            "accounts_key": "bankAccounts",
             "account_number_key": "accountNumber",
             "bank_name_key": "bankName",
             "account_name_key": "accountName",

@@ -27,7 +27,7 @@ def all_providers(
 @admin_provider_router.post("")
 async def add_provider(
         data: UpsertProvider,
-        action_for: Literal["vtu", "pgw"], 
+        action_for: Literal["pgw"], 
         user: User = Depends(require_admin), 
         db: Session = Depends(get_db)
     ):
@@ -46,7 +46,7 @@ async def update_provider(
 @admin_provider_router.delete('/{delete_for}/{id}')
 def delete_provide(
         id: int,
-        action_for: Literal["vtu", "pgw"], 
+        action_for: Literal["pgw"], 
         user: User = Depends(require_admin), 
         db: Session = Depends(get_db)
     ):
