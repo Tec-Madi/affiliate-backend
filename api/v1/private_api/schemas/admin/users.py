@@ -4,6 +4,12 @@ from typing import Optional
 
 from models.users import TxnType
 
+
+class UpdateUserBalance(BaseModel):
+    amount: Decimal
+    txn_type: TxnType
+    message: str    
+
 class UpsertUser(BaseModel):
     name: Optional[str] = None
     email: Optional[str] = None
@@ -15,8 +21,3 @@ class UpsertUser(BaseModel):
     is_admin: Optional[bool] = None
     allow_api_access: Optional[bool] = None
     update_balance: Optional[UpdateUserBalance] = None
-
-class UpdateUserBalance(BaseModel):
-    amount: Decimal
-    txn_type: TxnType
-    message: str    

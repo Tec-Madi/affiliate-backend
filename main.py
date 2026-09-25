@@ -28,9 +28,9 @@ from api.v1.public_api.routers import user_api_purchase, api_mimick_router
 
 
 app = FastAPI(
-    docs_url=None,
-    redoc_url=None,
-    openapi_url=None
+    # docs_url=None,
+    # redoc_url=None,
+    # openapi_url=None
 )
 
 origins = [

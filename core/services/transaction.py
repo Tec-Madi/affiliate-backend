@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from core.error.http import InconsistenceBalanceError, InsufficientBalanceError, NotFoundError
 from core.utils import PaymentExecutorResponse, ProviderResponse, TxnDetails, generate_reference
 from core.services.wallet import Wallet_Manager
-from models.plans.network import DiscountType
+from models.plans.network import DataPlan, DiscountType
 from models.users import Status, TxnType, User
 from repositories.users import BonusTxnRepository, TxnRepository
 
@@ -25,32 +25,30 @@ class TransactionService:
         reference = generate_reference(txn_details.get("service"))
         amount = getattr(plan, 'price', amount)
 
-        if from_api:
-            api_discount_type = getattr(plan, 'api_discount_type', DiscountType.FLAT.value)
-            api_discount = getattr(plan, 'api_discount', 0)
-            if api_discount:
-                api_price_map = {
-                    DiscountType.FLAT.value: amount - api_discount,
-                    DiscountType.PERCENTAGE.value: amount * (Decimal('1') - api_discount/Decimal('100'))
-                }
-                amount = api_price_map.get(api_discount_type)
-                cash_back = Decimal('0')
+        discount = (
+            plan.api_discount if from_api
+            else plan.agent_discount if self.user.is_agent
+            else plan.discount
+        ) or Decimal("0")
 
-        else:
-            discount = (getattr(plan, 'agent_discount', Decimal(0)) if self.user.is_agent else getattr(plan, 'discount', Decimal(0))) or Decimal(0)
-            discount_type = getattr(plan, 'agent_discount_type', DiscountType.FLAT.value) if self.user.is_agent else getattr(plan, 'discount_type', DiscountType.FLAT.value)
-            cash_back = (
-                discount if discount_type == DiscountType.FLAT.value 
-                else amount*discount/Decimal('100') if discount_type == DiscountType.PERCENTAGE.value 
-                else Decimal("0")
-            )
+        discount_type = (
+            plan.api_discount_type if from_api
+            else plan.agent_discount_type if self.user.is_agent
+            else plan.discount_type
+        ) or DiscountType.FLAT.value
+
+        amount = amount - discount if from_api else amount
+        cash_back = (
+            Decimal("0") if from_api 
+            else discount if discount_type == DiscountType.FLAT.value
+            else amount*discount/Decimal('100') if discount_type == DiscountType.PERCENTAGE.value
+            else Decimal("0")
+        )
 
         self.wallet_manager.lock_wallet()
 
         if not self.wallet_manager.has_sufficient_balance(amount): 
             raise InsufficientBalanceError()
-        if not self.wallet_manager.has_consistent_balance():
-            raise InconsistenceBalanceError()
 
         old_balance = self.wallet_manager.current_balance()
         new_balance = self.wallet_manager.update_balance(-amount)

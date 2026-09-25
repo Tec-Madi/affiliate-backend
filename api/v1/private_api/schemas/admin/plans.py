@@ -15,6 +15,11 @@ class PlanQuery(BaseModel):
     is_active: Optional[bool] = None
     is_locked: Optional[bool] = None
 
+class UpsertProviderPlanSchema(BaseModel):
+    plan_id: Optional[int] = None
+    provider_name: Optional[str] = None
+    provider_plan_id: Optional[str] = None
+
 class UpsertPlanSchema(BaseModel):
     biller_id: Optional[int] = None
     type: Optional[DataType | DiscoType] = None
@@ -36,21 +41,16 @@ class UpsertPlanSchema(BaseModel):
     vend_from: Optional[str] = None
     linked_plan: Optional[UpsertProviderPlanSchema] = None
 
-class UpsertProviderPlanSchema(BaseModel):
-    plan_id: Optional[int] = None
+class UpsertProviderBillerSchema(BaseModel):
+    biller_id: Optional[int] = None
     provider_name: Optional[str] = None
-    provider_plan_id: Optional[str] = None
+    provider_biller_id: Optional[str] = None
 
 class UpsertBillerSchema(BaseModel):
     id: Optional[int] = None
     name: Optional[str] = None
     is_active: Optional[bool] =  None
     linked_biller: Optional[UpsertProviderBillerSchema] = None
-
-class UpsertProviderBillerSchema(BaseModel):
-    biller_id: Optional[int] = None
-    provider_name: Optional[str] = None
-    provider_biller_id: Optional[str] = None
 
 class PlanControlSchema(BaseModel):
     biller_id: int

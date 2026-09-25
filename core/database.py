@@ -13,6 +13,7 @@ def create_db_engine(url: str):
     return create_engine(
         url,
         connect_args={"prepare_threshold": None},
+        pool_pre_ping=True
     )
 
 aishorasub_engine = create_db_engine(AISHORASUB_DATABASE_URL)
@@ -24,6 +25,7 @@ meeralinks_session = sessionmaker(bind=meeralinks_engine)
 hzquicklink_session = sessionmaker(bind=hzquicklink_engine)
 
 DB_MAP = {
+    "127.0.0.1": hzquicklink_session,
     "api.aishorasub.com": aishorasub_session,
     "api.meeralinks.com": meeralinks_session,
     "api.hzquicklink.com": hzquicklink_session,

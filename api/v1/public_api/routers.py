@@ -21,13 +21,13 @@ user_api_purchase = APIRouter(
 )
 
 @user_api_purchase.post("")
-def vtu_purchase(
+async def vtu_purchase(
         service: Literal[Services.AIRTIME, Services.DATA, Services.CABLE, Services.DISCO],
         payload: VTUPurchase,
         user: User = Depends(get_api_user), 
         db: Session = Depends(get_db)
     ):
-    return virtual_top_up_function(user=user, db=db, service=service, payload=payload, from_api=True)
+    return await virtual_top_up_function(user=user, db=db, service=service, payload=payload, from_api=True)
 
 
 api_mimick_router = APIRouter(
@@ -35,8 +35,8 @@ api_mimick_router = APIRouter(
 )
 
 @api_mimick_router.post('/api/user')
-def ADEX_CRED_DETAILS(credentials: HTTPBasicCredentials = Depends(HTTPBasic()), db: Session = Depends(get_db)):
-    return get_user_function(provider=ProviderType.ADEX, credentials=credentials, db=db)
+async def ADEX_CRED_DETAILS(credentials: HTTPBasicCredentials = Depends(HTTPBasic()), db: Session = Depends(get_db)):
+    return await get_user_function(provider=ProviderType.ADEX, credentials=credentials, db=db)
 
 @api_mimick_router.post('/api/{service_path}')
 async def adex_vtu_purchase(
@@ -48,8 +48,8 @@ async def adex_vtu_purchase(
     return await vtu_purchase_mimick_function(user=user, db=db, provider=ProviderType.ADEX, body=body, service_path=service_path)
 
 @api_mimick_router.get('/api/user/')
-def MSORG_CRED_DETAILS(credentials: User = Depends(get_api_user), db: Session = Depends(get_db)):
-    return get_user_function(provider=ProviderType.MSORG, credentials=credentials, db=db)
+async def MSORG_CRED_DETAILS(credentials: User = Depends(get_api_user), db: Session = Depends(get_db)):
+    return await get_user_function(provider=ProviderType.MSORG, credentials=credentials, db=db)
 
 @api_mimick_router.post("/api/{service_path}/")
 async def msorg_vtu_purchase(
@@ -73,7 +73,7 @@ async def msorg_vtu_purchase(
 
 
 
-def get_user_function(provider: ProviderType, credentials: HTTPBasicCredentials | User, db: Session):
+async def get_user_function(provider: ProviderType, credentials: HTTPBasicCredentials | User, db: Session):
 
     try:
         if provider == ProviderType.ADEX:

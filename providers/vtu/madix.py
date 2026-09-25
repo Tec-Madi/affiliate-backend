@@ -24,6 +24,7 @@ class MadixProvider(BaseProvider):
         biller_id = payload.get("biller_id")
         plan_id = payload.get("plan_id")
         plan_type = payload.get("plan_type")
+        amount = payload.get("amount")
         beneficiary = payload.get("beneficiary")
         request_id = payload.get("request_id")
 
@@ -34,8 +35,9 @@ class MadixProvider(BaseProvider):
             url = self.base_url + "/v1/airtime"
 
             body = {
-                "biller_id": biller_id,
-                "plan_id": plan_id,
+                "biller_id": int(biller_id),
+                "plan_type": "VTU",
+                "amount": float(amount),
                 "beneficiary": beneficiary,
                 "request_id": request_id,
             }

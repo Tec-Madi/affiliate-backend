@@ -1,11 +1,11 @@
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, EmailStr
 
 class Register(BaseModel):
     name: str
     email: EmailStr
     number: str 
     pin: str 
-    password: str
+    password: str 
 
 class Login(BaseModel):
     email: EmailStr
