@@ -12,5 +12,5 @@ webhook_router = APIRouter(
 )
 
 @webhook_router.post("")
-def receive_payments(request: Request, provider: PaymentProviderName, db: Session = Depends(get_db)):
-  return receive_payment(db=db, request=request, payment_provider_name=provider)
+async def receive_payments(request: Request, provider: PaymentProviderName, db: Session = Depends(get_db)):
+  return await receive_payment(db=db, request=request, payment_provider_name=provider)

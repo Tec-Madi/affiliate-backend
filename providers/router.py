@@ -11,6 +11,7 @@ from models.plans.network import AirtimePlan, DataPlan, ProviderDataPlan, Provid
 from models.users import Services
 from providers.pgw.paymentpoint import PaymentPoint
 from providers.pgw.securewaveng import SecureWaveNg
+from providers.vtu.madix import MadixProvider
 from providers.vtu.ogdams import Ogdams
 from providers.vtu.quicklysim import QuicklySim
 from providers.vtu.smeplug import SmePlug
@@ -68,6 +69,7 @@ class VTURouter:
             raise NotFoundError("Provider plan_id not found")
 
         base_provider_map = {
+            ProviderType.MADIX.value: MadixProvider,
             ProviderType.ADEX.value: AdexProvider,
             ProviderType.MSORG.value: MsorgProvider,
             ProviderType.QUICKLYSIM.value: QuicklySim,
