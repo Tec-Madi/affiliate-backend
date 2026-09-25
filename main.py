@@ -82,7 +82,7 @@ app.include_router(admin_biller_router, prefix="/api/v1")
 app.include_router(admin_plan_router, prefix="/api/v1")
 
 #<---------- WEBHOOK --------->
-app.include_router(webhook_router, prefix='/webook')
+app.include_router(webhook_router, prefix='/v1')
 
 ####################################################
 #################### PUBLIC API ####################
